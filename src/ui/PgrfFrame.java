@@ -1,6 +1,8 @@
 package ui;
+
+import utils.Renderer;
+
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -10,23 +12,25 @@ import java.util.TimerTask;
 
 public class PgrfFrame extends JFrame implements MouseMotionListener {
 
-    static int FPS = 1000/60;
+    static int FPS = 1000 / 60;
     private BufferedImage img; // pro vykreslovani
     static int width = 800;
     static int height = 600;
     private JPanel panel;
+    private Renderer renderer;
+    private int coorX, coorY;
 
     public static void main(String... args) {
         PgrfFrame pgrfFrame = new PgrfFrame();
         pgrfFrame.img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB); // Prideleni ARGB barev
-        pgrfFrame.init(width,height);
+        pgrfFrame.init(width, height);
     }
 
     // Inicializace vykresleni
-    private void init(int width, int height){
+    private void init(int width, int height) {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-        setSize(width,height);
+        setSize(width, height);
         setTitle("Počítačová grafika");
 
         panel = new JPanel();
@@ -34,19 +38,21 @@ public class PgrfFrame extends JFrame implements MouseMotionListener {
 
         setLocationRelativeTo(null);
 
+        renderer = new Renderer(img);
+
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 draw();
             }
-        },  100, FPS);
+        }, 100, FPS);
 
 
         panel.addMouseMotionListener(this);
         panel.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mouseClicked (MouseEvent e) {
                 super.mouseClicked(e);
             }
         });
@@ -56,7 +62,8 @@ public class PgrfFrame extends JFrame implements MouseMotionListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-
+        coorX = e.getX();
+        coorY = e.getY();
     }
 
     @Override
@@ -65,17 +72,15 @@ public class PgrfFrame extends JFrame implements MouseMotionListener {
     }
 
     // vykresleni
-    private void draw(){
-        img.getGraphics().fillRect(0,0,img.getWidth(),img.getHeight()); // prideleni pozadi
-        for (int i = 0; i <100 ; i++) {
-            img.setRGB(200 + i,200, Color.RED.getRGB()); // udela se cara
-        }
+    private void draw() {
+        img.getGraphics().fillRect(0, 0, img.getWidth(), img.getHeight()); // prideleni pozadi
 
+        renderer.lineTrivial(300, 300, coorX, coorY);
 
-        panel.getGraphics().drawImage(img, 0,0,img.getWidth(), img.getHeight(), null); // zde ji to vykresli
+        panel.getGraphics().drawImage(img, 0, 0, img.getWidth(), img.getHeight(), null); // zde ji to vykresli
         panel.paintComponents(getGraphics());
-
-
     }
 
+
 }
+
