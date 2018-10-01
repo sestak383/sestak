@@ -1,11 +1,14 @@
 package ui;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class PgrfFrame extends JFrame {
+public class PgrfFrame extends JFrame implements MouseMotionListener {
 
     static int FPS = 1000/60;
     private BufferedImage img; // pro vykreslovani
@@ -39,7 +42,25 @@ public class PgrfFrame extends JFrame {
             }
         },  100, FPS);
 
+
+        panel.addMouseMotionListener(this);
+        panel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+            }
+        });
         draw();
+
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
 
     }
 
@@ -53,6 +74,8 @@ public class PgrfFrame extends JFrame {
 
         panel.getGraphics().drawImage(img, 0,0,img.getWidth(), img.getHeight(), null); // zde ji to vykresli
         panel.paintComponents(getGraphics());
+
+
     }
 
 }
